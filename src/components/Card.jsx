@@ -1,5 +1,3 @@
-import Spinner from "./Spinner";
-
 function Card(props) {
     return (
         <div className=" bg-white w-[calc(100%_-_16px)] min-h-10 p-4">
