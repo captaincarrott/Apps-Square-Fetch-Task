@@ -1,7 +1,7 @@
 function Card(props) {
     return (
         <div className=" bg-white w-[calc(100%_-_16px)] min-h-10 p-4">
-            <div className="flex  items-center  text-start cursor-pointer">
+            <div className="flex items-center text-start cursor-pointer">
                 
             <img className="min-w-12 max-w-28" src={props.image} alt='product image'/>
 
