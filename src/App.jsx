@@ -10,7 +10,7 @@ import SignUp from './pages/SignUp';
 function App() {
 return (
 
-  <Routes>
+  <Routes basename="Apps-Square-Fetch-Task">
     <Route path='/Apps-Square-Fetch-Task' element={<Home />}/>
     <Route path='/Apps-Square-Fetch-Task/SignUp' element={<SignUp />}/>
   </Routes>
