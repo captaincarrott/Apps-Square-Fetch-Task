@@ -107,7 +107,7 @@ useEffect(() => {
     return (
         <>
         <Navbar />
-    <div className="flex flex-col justify-center items-center bg-[url(/blurry-shot-interior-shopping-mall.jpg)] h-fit bg-center bg-cover">
+    <div className="flex flex-col justify-center items-center bg-[url(/blurry-shot-interior-shopping-mall (1).jpg)] h-fit bg-center bg-cover">
         <form onSubmit={handleSubmit} className="my-8 flex flex-col rounded-[5px] bg-white p-4 sm:p-8 w-[90%] max-w-[576px] border-l-4 border-[#1C65A2]">
 
         <div>
