@@ -9,3 +9,7 @@
   transition: transform 0.5s, opacity 0.5s ease;
   opacity: 1;
 }
+
+.bg {
+  background-image: url("public/blurry-shot-interior-shopping-mall.jpg");
+}
