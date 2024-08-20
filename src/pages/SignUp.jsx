@@ -17,6 +17,7 @@ const SignUp = function() {
     const [emailError, setEmailError] = useState();
     const [phoneError, setPhoneError] = useState();
     const [passError, setPassError] = useState();
+    const [imageError, setImageError] = useState();
     const [success, setSuccess] = useState();
     const [file, setFile] = useState();
     const [formData, setFormData] = useState({
@@ -73,6 +74,11 @@ const SignUp = function() {
         setFormData({ ...formData, image: file });
         setFile(URL.createObjectURL(file));
         console.log(file)
+        if (!file) {
+            setImageError(true);
+        }else {
+            setImageError(false)
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -84,6 +90,9 @@ const SignUp = function() {
         data.append("password", formData.password);
         data.append("image", formData.image);
     
+        if (!formData.image) {
+            setImageError(true);
+        }
             const response = await fetch("https://www.appssquare.sa/api/submit", {
                 method: "POST",
                 body: data,
@@ -151,16 +160,18 @@ useEffect(() => {
         <div className="flex justify-center items-center mt-2 w-32">
         <input onChange={handleImageChange} name="image" type="file" id="image" accept="image/*" className={`${file ? `block` : 'hidden'} overflow-hidden w-[88px] file:hidden text-xs`}/>
         {file && <img className=" w-10 h-10" src={file} alt="" />}
+        {imageError && <div className="text-[10px] text-red-600">Please select your image</div>}
         </div> 
         </div>
         <input type="submit" value="Sign Up" className="text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"/>
         </div>
         </form>
 
+    {!imageError &&
         <div className={`fixed top-[-20px] mx-auto p-2 bg-[#1C65A2] rounded-[5px] space-x-2 w-[80%] sm:max-w-[400px] text-base ${success ? 'animate-success' : 'hidden-success'}`}>
     <CheckOutlined className="text-white" />
     <p className="inline-block text-white">Success!</p>
-</div>
+    </div>}
 
     </div>
 
