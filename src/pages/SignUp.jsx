@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 
 import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined } from "@ant-design/icons";
 
-const nameRegex = /^[0-9A-Za-z]{6,16}$/;
+const nameRegex = /^[0-9A-Za-z\s]{6,16}$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passRegex =  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 const phoneRegex = /^01[0-2,5]{1}[0-9]{8}$/
@@ -132,7 +132,7 @@ useEffect(() => {
             </div>
 
             <div className="relative">
-            <label htmlFor="phone" className="font-semibold text-sm">Password <span className="text-red-600">*</span></label>
+            <label htmlFor="phone" className="font-semibold text-sm">Phone number <span className="text-red-600">*</span></label>
             <input onChange={handleChange} name="phone" type="tel" id="phone" placeholder="Enter phone number" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
             {phoneError ? <span id="nameAlert" className="text-xs text-red-600">Enter a valid phone number</span> : null}
             </div>
