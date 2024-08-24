@@ -1,8 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useState, useEffect } from "react";
-
-import Navbar from "../components/Navbar";
-
+import SignIn from "./SignIn";
 import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined } from "@ant-design/icons";
 
 const nameRegex = /^[0-9A-Za-z\s]{6,16}$/;
@@ -13,13 +11,17 @@ const phoneRegex = /^01[0-2,5]{1}[0-9]{8}$/
 const SignUp = function() {
     const [inputType, setInputType] = useState(false);
 
-    const [nameError, setNameError] = useState();
-    const [emailError, setEmailError] = useState();
-    const [phoneError, setPhoneError] = useState();
-    const [passError, setPassError] = useState();
-    const [imageError, setImageError] = useState();
-    const [success, setSuccess] = useState();
+    const [errors, setErrors] = useState({
+        nameError: '',
+        emailError: '',
+        phoneError: '',
+        passError: '',
+        imageError: '',
+        success: '',
+    });
+
     const [file, setFile] = useState();
+    const [auth, setAuth] = useState('signup');
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -33,33 +35,57 @@ const SignUp = function() {
 
         if (e.target.name == 'name') {
             if (nameRegex.test(e.target.value) || e.target.value == '') {
-                setNameError(false);
+                setErrors((errors) => ({
+                    ...errors,
+                    nameError: false
+                }));
             }else if (!nameRegex.test(e.target.value)) {
-                setNameError(true);
+                setErrors((errors) => ({
+                    ...errors,
+                    nameError: true
+                }));
             }
         }
         
         if (e.target.name == 'email') {
             if (emailRegex.test(e.target.value) || e.target.value == '') {
-                setEmailError(false)
+                setErrors((errors) => ({
+                    ...errors,
+                    emailError: false
+                }));
             }else if (!emailRegex.test(e.target.value)) {
-                setEmailError(true)
+                setErrors((errors) => ({
+                    ...errors,
+                    emailError: true
+                }));
             }
         }
         
         if (e.target.name == 'phone') {
             if (phoneRegex.test(e.target.value) || e.target.value == '') {
-                setPhoneError(false)
+                setErrors((errors) => ({
+                    ...errors,
+                    phoneError: false
+                }))
             }else if (!phoneRegex.test(e.target.value)) {
-                setPhoneError(true)
+                setErrors((errors) => ({
+                    ...errors,
+                    phoneError: true
+                }))
             }
         }
 
         if (e.target.name == 'password') {
             if (passRegex.test(e.target.value) || e.target.value == '') {
-                setPassError(false);
+                setErrors((errors) => ({
+                    ...errors,
+                    passError: false
+                }))
             }else if (!passRegex.test(e.target.value)) {
-                setPassError(true);
+                setErrors((errors) => ({
+                    ...errors,
+                    passError: true
+                }))
             }
         }
         
@@ -75,9 +101,15 @@ const SignUp = function() {
         setFile(URL.createObjectURL(file));
         console.log(file)
         if (!file) {
-            setImageError(true);
+            setErrors((errors) => ({
+                ...errors,
+                imageError: true
+            }));
         }else {
-            setImageError(false)
+            setErrors((errors) => ({
+                ...errors,
+                imageError: false
+            }))
         }
     };
 
@@ -91,7 +123,10 @@ const SignUp = function() {
         data.append("image", formData.image);
     
         if (!formData.image) {
-            setImageError(true);
+            setErrors((errors) => ({
+                ...errors,
+                imageError: true
+            }));
         }
             const response = await fetch("https://www.appssquare.sa/api/submit", {
                 method: "POST",
@@ -100,23 +135,32 @@ const SignUp = function() {
             
             const result = await response.json();
             console.log(result);
-            setSuccess(true);
+            setErrors((errors) => ({
+                ...errors,
+                success: true
+            }));
 }
 useEffect(() => {
-    if (success) {
+    if (errors.success) {
         const timer = setTimeout(() => {
-            setSuccess(false);
+            setErrors((errors) => ({
+                ...errors,
+                success: false
+            }));
         }, 3000);
         console.log(timer)
         return () => clearTimeout(timer);
     }
-}, [success]);
+}, [errors.success]);
+
+if (auth === 'signin') {
+    return <SignIn />
+}
 
     
     return (
         <>
-        <Navbar />
-    <div className="flex flex-col justify-center items-center bg h-fit bg-center bg-cover">
+    <div className="flex flex-col justify-center items-center bg-[url(public/blurry-shot-interior-shopping-mall.jpg)] h-fit bg-center bg-cover">
         <form onSubmit={handleSubmit} className="my-8 flex flex-col rounded-[5px] bg-white p-4 sm:p-8 w-[90%] max-w-[576px] border-l-4 border-[#1C65A2]">
 
         <div>
@@ -131,26 +175,26 @@ useEffect(() => {
             <div>
             <label htmlFor="name" className="font-semibold text-sm">Name <span className="text-red-600">*</span></label>
             <input onChange={handleChange} name="name" type="text" id="name" placeholder="Enter your name" required className="peer p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-            {nameError ? <span id="nameAlert" className="text-xs text-red-600">Username should be 6-16 characters and shouldn't include any special characters</span> : null}
+            {errors.nameError ? <span id="nameAlert" className="text-xs text-red-600">Username should be 6-16 characters and shouldn't include any special characters</span> : null}
             </div>
 
             <div>
             <label htmlFor="email" className="font-semibold text-sm">Email <span className="text-red-600">*</span></label>
             <input onChange={handleChange} name="email" type="email" id="email" placeholder="Enter your email" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-            {emailError ? <span className="text-xs text-red-600">It should be a valid email address</span> : null}
+            {errors.emailError ? <span className="text-xs text-red-600">It should be a valid email address</span> : null}
             </div>
 
             <div className="relative">
             <label htmlFor="phone" className="font-semibold text-sm">Phone number <span className="text-red-600">*</span></label>
             <input onChange={handleChange} name="phone" type="tel" id="phone" placeholder="Enter phone number" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-            {phoneError ? <span id="nameAlert" className="text-xs text-red-600">Enter a valid phone number</span> : null}
+            {errors.phoneError ? <span id="nameAlert" className="text-xs text-red-600">Enter a valid phone number</span> : null}
             </div>
 
             <div className="relative">
             <label htmlFor="password" className="font-semibold text-sm">Password <span className="text-red-600">*</span></label>
             <input onChange={handleChange} name="password" type={inputType ? 'text' : 'password'} id="password" placeholder="Enter password" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
             {inputType ? <EyeInvisibleOutlined className="absolute top-9 left-[calc(100%_-_32px)] text-xl" onClick={typeHandler}/> : <EyeOutlined className="absolute top-9 left-[calc(100%_-_32px)] text-xl" onClick={typeHandler}/>}
-            {passError ? <span className="text-xs text-red-600">Password should be 8-20 characters and include atleast 1 letter, 1 number and 1 special character</span> : null}
+            {errors.passError ? <span className="text-xs text-red-600">Password should be 8-20 characters and include atleast 1 letter, 1 number and 1 special character</span> : null}
             </div>
         </div>
 
@@ -160,15 +204,19 @@ useEffect(() => {
         <div className="flex justify-center items-center mt-2 w-32">
         <input onChange={handleImageChange} name="image" type="file" id="image" accept="image/*" className={`${file ? `block` : 'hidden'} overflow-hidden w-[88px] file:hidden text-xs`}/>
         {file && <img className=" w-10 h-10" src={file} alt="" />}
-        {imageError && <div className="text-[10px] text-red-600">Please select your image</div>}
+        {errors.imageError && <div className="text-[10px] text-red-600">Please select your image</div>}
         </div> 
         </div>
         <input type="submit" value="Sign Up" className="text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"/>
         </div>
+
+        <div className="mt-6">
+            <p onClick={() => setAuth('signin')} className="cursor-pointer text-xs text-center text-[#1C65A2]">You already have an account plaese sign in</p>
+        </div>
         </form>
 
-    {!imageError &&
-        <div className={`fixed top-[-20px] mx-auto p-2 bg-[#1C65A2] rounded-[5px] space-x-2 w-[80%] sm:max-w-[400px] text-base ${success ? 'animate-success' : 'hidden-success'}`}>
+    {!errors.imageError &&
+        <div className={`fixed top-[-20px] mx-auto p-2 bg-[#1C65A2] rounded-[5px] space-x-2 w-[80%] sm:max-w-[400px] text-base ${errors.success ? 'animate-success' : 'hidden-success'}`}>
     <CheckOutlined className="text-white" />
     <p className="inline-block text-white">Success!</p>
     </div>}

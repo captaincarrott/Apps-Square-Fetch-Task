@@ -25,7 +25,7 @@ const Navbar = function() {
                 <div className="space-x-5 flex justify-center items-center">
                     <SearchOutlined className="text-xl cursor-pointer"/>
                     
-                        <Link to="/Apps-Square-Fetch-Task/SignUp"><UserOutlined className="text-xl cursor-pointer"/></Link>
+                        <Link to="/Apps-Square-Fetch-Task/Auth"><UserOutlined className="text-xl cursor-pointer"/></Link>
                     <ShoppingCartOutlined className="text-xl cursor-pointer"/>
                 </div>
             </div>
