@@ -1,47 +1,46 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useState, useEffect } from "react";
 import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/auth/userSlice";
 
-const nameRegex = /^[0-9A-Za-z\s]{6,16}$/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 const SignIn = function() {
     const [inputType, setInputType] = useState(false);
     
     const [errors, setErrors] = useState({
-        nameError: '',
+        emailError: '',
         passError: '',
-        imageError: '',
         success: '',
     });
 
     const [formData, setFormData] = useState({
-        name: "",
         email: "",
-        phone: "",
         password: "",
-        image: null
     });
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-
-        if (e.target.name === 'name') {
-            if (nameRegex.test(e.target.value) || e.target.value === '') {
+        if (e.target.name === 'email') {
+            if (emailRegex.test(e.target.value) || e.target.value === '') {
                 setErrors((prevErrors) => ({
                     ...prevErrors,
-                    nameError: false,
+                    emailError: false,
                 }));
             } else {
                 setErrors((prevErrors) => ({
                     ...prevErrors,
-                    nameError: true,
+                    emailError: true,
                 }));
             }
         }
 
         if (e.target.name === 'password') {
-            if (passRegex.test(e.target.value) || e.target.value === '') {
+            if (e.target.value || e.target.value === '') {
                 setErrors((prevErrors) => ({
                     ...prevErrors,
                     passError: false,
@@ -61,30 +60,33 @@ const SignIn = function() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData();
-        data.append("name", formData.name);
-        data.append("password", formData.password);
+        
+            const response = await axios.post('https://backend.profferdeals.com/api/admin/login', {
+                email: formData.email, 
+                password: formData.password,
+            });
+    
+            console.log(response.data);
+            console.log(formData)
+            const { token, data: { email } } = response.data;
+            console.log(email)
+            
+            if (token) {
+                    console.log('Token exists:', token);
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('email', JSON.stringify(email));
+                
+    
+                dispatch(loginSuccess({ email, token }));
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    success: true,
+                }));
+            }
 
-        if (!formData.image) {
-            setErrors((prevErrors) => ({
-                ...prevErrors,
-                imageError: true,
-            }));
-            return;
-        }
-
-        const response = await fetch("https://www.appssquare.sa/api/submit", {
-            method: "POST",
-            body: data,
-        });
-
-        const result = await response.json();
-        console.log(result);
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            success: true,
-        }));
     };
+    
+    
 
     useEffect(() => {
         if (errors.success) {
@@ -100,7 +102,7 @@ const SignIn = function() {
 
     return (
         <>
-        <div className="flex flex-col justify-center items-center bg-[url(public/blurry-shot-interior-shopping-mall.jpg)] h-screen bg-center bg-cover">
+        <div className="flex flex-col justify-center items-center bg-[url(/blurry-shot-interior-shopping-mall.jpg)] h-screen bg-center bg-cover">
             <form onSubmit={handleSubmit} className="my-8 flex flex-col rounded-[5px] bg-white p-4 sm:p-8 w-[90%] max-w-[576px] border-l-4 border-[#1C65A2]">
                 <div>
                     <h1 className="font-bold text-5xl text-[#606362]"><span className="text-[#1C65A2]">E</span>square²</h1>
@@ -110,11 +112,11 @@ const SignIn = function() {
                     </div>
                 </div>
                 <div className="flex flex-col space-y-4">
-                    <div>
-                        <label htmlFor="name" className="font-semibold text-sm">Name <span className="text-red-600">*</span></label>
-                        <input onChange={handleChange} name="name" type="text" id="name" placeholder="Enter your name" required className="peer p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-                        {errors.nameError ? <span id="nameAlert" className="text-xs text-red-600">Username should be 6-16 characters and shouldn't include any special characters</span> : null}
-                    </div>
+                <div>
+                    <label htmlFor="email" className="font-semibold text-sm">Email <span className="text-red-600">*</span></label>
+                    <input onChange={handleChange} name="email" type="email" id="email" placeholder="Enter your email" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
+                    {errors.emailError ? <span className="text-xs text-red-600">It should be a valid email address</span> : null}
+                </div>
                     <div className="relative">
                         <label htmlFor="password" className="font-semibold text-sm">Password <span className="text-red-600">*</span></label>
                         <input onChange={handleChange} name="password" type={inputType ? 'text' : 'password'} id="password" placeholder="Enter password" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
@@ -124,16 +126,16 @@ const SignIn = function() {
                 </div>
                 <div className="flex flex-col justify-center items-center relative">
                     <div className="mt-8 mb-4"> 
-                        <input type="submit" value="Sign Up" className="text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"/>
+                        <input type="submit" value="Sign In" className="text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"/>
                     </div>
                 </div>
             </form>
-            {!errors.imageError && 
+            {!errors.emailError && !errors.passError ?
                 <div className={`fixed top-[-20px] mx-auto p-2 bg-[#1C65A2] rounded-[5px] space-x-2 w-[80%] sm:max-w-[400px] text-base ${errors.success ? 'animate-success' : 'hidden-success'}`}>
                     <CheckOutlined className="text-white" />
                     <p className="inline-block text-white">Success!</p>
                 </div>
-            }
+            : null}
         </div>
         </>
     );
