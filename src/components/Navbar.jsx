@@ -10,13 +10,8 @@ const Navbar = function() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   console.log(isAuthenticated)
 
-  const token = localStorage.getItem('token');
-  const email = JSON.parse(localStorage.getItem('email'));
-
   const handleLogOut = function() {
-    dispatch(logout({ email, token }));
-    localStorage.removeItem('email');
-    localStorage.removeItem('token');
+    dispatch(logout());
   }
 
     return (

@@ -1,7 +1,4 @@
 import './App.css';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from './store/auth/userSlice';
 import Auth from './pages/Auth';
 import { Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -13,21 +10,8 @@ import SignIn from './components/SignIn';
 
 
 function App() {
-  const dispatch = useDispatch()
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   console.log(isAuthenticated)
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const email = JSON.parse(localStorage.getItem('email'));
-
-    if (token && email) {
-      dispatch(loginSuccess({ email, token }));
-    }
-  }, [dispatch]);
-
-
-
 return (
   <Routes basename="Apps-Square-Fetch-Task">
     <Route path='/Apps-Square-Fetch-Task' element={isAuthenticated ? <Home /> : <SignIn />}/>

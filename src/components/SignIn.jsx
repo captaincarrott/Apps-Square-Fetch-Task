@@ -73,10 +73,6 @@ const SignIn = function() {
             
             if (token) {
                     console.log('Token exists:', token);
-                    localStorage.setItem('token', token);
-                    localStorage.setItem('email', JSON.stringify(email));
-                
-    
                 dispatch(loginSuccess({ email, token }));
                 setErrors((prevErrors) => ({
                     ...prevErrors,
