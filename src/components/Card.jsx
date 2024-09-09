@@ -5,7 +5,7 @@ function Card(props) {
                 
             <img className="min-w-12 max-w-28" src={props.image} alt='product image'/>
 
-            <div className="pl-7">
+            <div className="pl-7 w-full">
             <h1 className="font-bold">
                 {props.title}
             </h1>

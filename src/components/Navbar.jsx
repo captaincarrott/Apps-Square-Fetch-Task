@@ -6,9 +6,8 @@ import { Link } from "react-router-dom";
 
 const Navbar = function() {
 
-      const dispatch = useDispatch()
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  console.log(isAuthenticated)
+    const dispatch = useDispatch()
+    const token = useSelector((state) => state.auth.token)
 
   const handleLogOut = function() {
     dispatch(logout());
@@ -31,6 +30,9 @@ const Navbar = function() {
                         <li className="cursor-pointer">About Us</li>
                         <li className="cursor-pointer">Services</li>
                         <li className="cursor-pointer">Our Products</li>
+                        {/* {token && <li className="cursor-pointer">
+                            <Link to="/Apps-Square-Fetch-Task/DashPage">Dashboard</Link>
+                        </li>} */}
                     </ul>
                 </div>
 
@@ -39,7 +41,7 @@ const Navbar = function() {
                     
                         {/* <Link to="/Apps-Square-Fetch-Task/Auth"><UserOutlined className="text-xl cursor-pointer"/></Link> */}
                     <ShoppingCartOutlined className="text-xl cursor-pointer"/>
-                    {isAuthenticated ? <button onClick={handleLogOut}>Log out</button> : null}
+                    {token ? <button onClick={handleLogOut}>Log out</button> : null}
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   email: null,
   token: null,
-  isAuthenticated: localStorage.getItem('token') ? true : false,
+  isAuthenticated: false, // Initially false, will be rehydrated by Redux Persist
 };
 
 const authSlice = createSlice({
@@ -14,19 +14,13 @@ const authSlice = createSlice({
       state.email = action.payload.email;
       state.token = action.payload.token;
       state.isAuthenticated = true;
-      const {email, token} = action.payload
-
-      if (email, token) {
-        localStorage.setItem('email', JSON.stringify(email));
-        localStorage.setItem('token', token);
-      }
+      // No need to manage localStorage here, Redux Persist will handle it
     },
     logout: (state) => {
       state.email = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('email', JSON.stringify(state.email));
-      localStorage.removeItem('token', state.token);
+      // No need to remove items from localStorage here
     },
   },
 });

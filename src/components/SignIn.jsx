@@ -4,13 +4,14 @@ import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined } from "@ant-design/ic
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../store/auth/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 const SignIn = function() {
     const [inputType, setInputType] = useState(false);
-    
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({
         emailError: '',
         passError: '',
@@ -78,6 +79,7 @@ const SignIn = function() {
                     ...prevErrors,
                     success: true,
                 }));
+                navigate('/Apps-Square-Fetch-Task/DashPage')
             }
 
     };
